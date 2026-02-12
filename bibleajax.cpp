@@ -90,31 +90,14 @@ int main()
 	   validVerse = true;
       }
    }
-
-   bool validBook = false;
-    if (book != cgi.getElements().end()){
-      int bookNum = book->getIntegerValue();
-      if (bookNum > 66){
-	   cout << "<p>The book number (" << bookNum << ") is too high.</p>";
-	}
-      else if (bookNum <= 0){
-	   cout << "<p>The book must be positive.</p>" << endl;
-	}
-      else {
-	   validBook = true;
-   }
- }   
-   if (validBook && validChapter && validVerse){
+   
+   if (validChapter && validVerse){
       validInput = true;
    }
 
    /* TODO: PUT CODE HERE TO CALL YOUR BIBLE CLASS FUNCTIONS
     *        TO LOOK UP THE REQUESTED VERSES
     */
-
-
-
-
    /* SEND BACK THE RESULTS
     * Finally we send the result back to the client on the standard output stream
     * in HTML text format.
@@ -128,19 +111,22 @@ int main()
       int bookNum = book->getIntegerValue();
       int verseNum = verse->getIntegerValue();
       int chapterNum = chapter->getIntegerValue();
+      int numOfVerses = nv->getIntegerValue();
       LookupResult result;
 
       Ref ref(bookNum, chapterNum, verseNum);
       Verse verse = webBible.lookup(ref,result);
       cout << "Search Type: <b>" << **st << "</b>" << endl;
-      cout << "<p>Your result: ";
       verse.display();
-      cout << "</p>";
+
+   for (int i = 1; i < numOfVerses; i++){
+      verse = webBible.nextVerse(result);
+      verse.display();
+      }   
    }
    else
    {
       cout << "<p>Invalid Input: <em>report the more specific problem.</em></p>" << endl;
    }
-
    return 0;
 }
