@@ -56,81 +56,48 @@ int main()
    form_iterator nv = cgi.getElement("num_verse");
 
    // Convert and check input data
-   bool validInput = false;
-
-   bool validChapter = false;
-   if (chapter != cgi.getElements().end())
-   {
-      int chapterNum = chapter->getIntegerValue();
-      if (chapterNum > 150)
-      {
-         cout << "<p>The chapter number (" << chapterNum << ") is too high.</p>" << endl;
-      }
-      else if (chapterNum <= 0)
-      {
-         cout << "<p>The chapter must be a positive number.</p>" << endl;
-      }
-      else
-      {
-         validChapter = true;
-      }
-   }
 
    // TODO: OTHER INPUT VALUE CHECKS ARE NEEDED ... but that's up to you!	
-    bool validVerse = false;
-    if (verse != cgi.getElements().end()){
-      int verseNum = verse->getIntegerValue();
-      if (verseNum > 176){
-	   cout << "<p>The verse number (" << verseNum << ") is too high.</p>";
-	}
-      else if (verseNum <= 0){
-	   cout << "<p>The verse must be positive.</p>" << endl;
-	}
-      else {
-	   validVerse = true;
-      }
-   }
-   
-   if (validChapter && validVerse){
-      validInput = true;
-   }
 
-   /* TODO: PUT CODE HERE TO CALL YOUR BIBLE CLASS FUNCTIONS
-    *        TO LOOK UP THE REQUESTED VERSES
-    */
    /* SEND BACK THE RESULTS
     * Finally we send the result back to the client on the standard output stream
     * in HTML text format.
     * This string will be inserted as is inside a container on the web page,
     * so we must include HTML formatting commands to make things look presentable!
+    */      
+   /* TODO: PUT CODE HERE TO CALL YOUR BIBLE CLASS FUNCTIONS
+    *        TO LOOK UP THE REQUESTED VERSES
     */
-   if (validInput)
-   {      
-      Bible webBible("/home/class/csc3004/Bibles/web-complete");
+   Bible webBible("/home/class/csc3004/Bibles/web-complete"); // create Bible object to access the bible file
+   int bookNum = book->getIntegerValue();
+   int verseNum = verse->getIntegerValue(); //assign values from form iterators to variables for creation of ref object
+   int chapterNum = chapter->getIntegerValue();
+   int numOfVerses = nv->getIntegerValue();
+   LookupResult result;
 
-      int bookNum = book->getIntegerValue();
-      int verseNum = verse->getIntegerValue();
-      int chapterNum = chapter->getIntegerValue();
-      int numOfVerses = nv->getIntegerValue();
-      LookupResult result;
+   Ref ref(bookNum, chapterNum, verseNum); //create ref object from form input values
+   Verse myVerse = webBible.lookup(ref,result); //lookup verse
 
-      Ref ref(bookNum, chapterNum, verseNum);
-      Verse verse = webBible.lookup(ref,result);
-      verse.display();
-   for (int i = 1; i < numOfVerses; i++){
-      Verse tempV = verse;
-      verse = webBible.nextVerse(result);
-      if (verse.getRef().getChapter() != tempV.getRef().getChapter()){ //newline between chapters
+   if (ref.isRefValid(ref) && result == SUCCESS){ //if we have a valid reference and the verse was found, display the verse
+      myVerse.display();
+
+      for (int i = 1; i < numOfVerses; i++){ //implementation for retrieval of multiple verses
+      Verse tempV = myVerse;
+      myVerse = webBible.nextVerse(result);
+      if (myVerse.getRef().getChapter() != tempV.getRef().getChapter()){ //newline between chapters
          cout << "<br><br>\n";
       }
       cout << "<br>";
-      verse.display();
-   
+      myVerse.display();
     }
    }
-   else
-   {
-      cout << "<p>Invalid Input: <em>report the more specific problem.</em></p>" << endl;
+   else if (ref.getChapter() <= 0 || ref.getVerse() <= 0){ //check for positive integers
+      cout << "<p> You must enter a positive integer for chapter and verse numbers. </p>" << endl;
    }
+   else{ //otherwise display an error message
+      cout << "<p> " << webBible.error(result) << "\n There is no verse " << 
+      verseNum << " in chapter " << chapterNum << " of the book of " << ref.getBookName() << ".</p>" 
+      << endl;
+    }
    return 0;
 }

@@ -42,7 +42,7 @@ Verse Bible::lookup(Ref ref, LookupResult& status)
 
    string line;
 
-   while (getline(instream , line)) { //get line fancy
+   while (getline(instream , line)) { //get line loop
 
 	   Verse aVerse(line);
 	   
@@ -93,7 +93,7 @@ string Bible::error(LookupResult status)
    else if (status == NO_CHAPTER)
       return "Error: Chapter not found!";
    else if (status == NO_VERSE)
-      return "Error! Verse not found";
+      return "Error! Verse not found!";
    else 
       return "Unknown Error";
 }
@@ -102,9 +102,6 @@ void Bible::display()
 {
    cout << "Bible file: " << infile << endl;
 }
-	
-
-
 // OPTIONAL access functions
 // OPTIONAL: Return the reference after the given ref
 Ref Bible::next(const Ref ref, LookupResult& status)

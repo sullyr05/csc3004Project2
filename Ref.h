@@ -35,8 +35,7 @@ class Ref
 {
    private:
       short book, chapter, verse;	// Reference information
-      static vector<BookInfo> bookInfo; //store books and their chapter counts
-      
+      static vector<BookInfo> bookInfo; //data structure to store books and their chapter counts
 
    public:
       // Constructors
@@ -48,6 +47,7 @@ class Ref
       int getBook();	// Access book number
       int getChapter();	// Access chapter number
       int getVerse();	// Access verse number
+      string getBookName(); //access book name, used for error mesages
 
       bool isRefValid(Ref ref); //check if reference is valid
       
@@ -60,8 +60,6 @@ class Ref
 	  // Your version of display should show the book name
       // corresponding to the stored book number.
       void display();
-
-      
 };
 
 #endif //Ref_H
