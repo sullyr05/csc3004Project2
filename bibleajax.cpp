@@ -116,13 +116,17 @@ int main()
 
       Ref ref(bookNum, chapterNum, verseNum);
       Verse verse = webBible.lookup(ref,result);
-      cout << "Search Type: <b>" << **st << "</b>" << endl;
       verse.display();
-
    for (int i = 1; i < numOfVerses; i++){
+      Verse tempV = verse;
       verse = webBible.nextVerse(result);
+      if (verse.getRef().getChapter() != tempV.getRef().getChapter()){ //newline between chapters
+         cout << "<br><br>\n";
+      }
+      cout << "<br>";
       verse.display();
-      }   
+   
+    }
    }
    else
    {

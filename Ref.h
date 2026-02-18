@@ -18,6 +18,7 @@
 
 #include <string> 
 #include <stdlib.h>
+#include <vector>
 
 using namespace std;
 
@@ -25,11 +26,18 @@ using namespace std;
 // up to the first character from delimiters
 string GetNextToken(string& str, const string& delimiters);
 
+struct BookInfo { //struct for our vector of books and their chapter counts
+   string name;
+   int chapterCount;
+};
+
 class Ref
 {
    private:
       short book, chapter, verse;	// Reference information
-	  
+      static vector<BookInfo> bookInfo; //store books and their chapter counts
+      
+
    public:
       // Constructors
       Ref();  	        // Default constructor
@@ -40,6 +48,8 @@ class Ref
       int getBook();	// Access book number
       int getChapter();	// Access chapter number
       int getVerse();	// Access verse number
+
+      bool isRefValid(Ref ref); //check if reference is valid
       
 	  // REQUIRED Comparison: determine if two references are equal
       bool operator==(const Ref &) const;
@@ -50,6 +60,8 @@ class Ref
 	  // Your version of display should show the book name
       // corresponding to the stored book number.
       void display();
+
+      
 };
 
 #endif //Ref_H
